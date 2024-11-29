@@ -1,40 +1,44 @@
 import streamlit as st
-import pandas as pd
 import matplotlib.pyplot as plt
+import numpy as np
 
-# Set application title
-st.title("Data Points Visualization Tool")
+# 标题
+st.title("Simple X-Y Plotting App")
 
-# Allow users to input x and y data points
-x_input = st.text_input("Enter x data points (comma-separated)", "1, 2, 3, 4, 5")
-y_input = st.text_input("Enter y data points (comma-separated)", "2, 4, 6, 8, 10")
+# 说明
+st.write("This app allows you to input X and Y values to plot a graph!")
 
-try:
-    # Convert input strings to numeric lists
-    x_data = [float(i) for i in x_input.split(',')]
-    y_data = [float(i) for i in y_input.split(',')]
+# 用户输入 X 和 Y 数据
+x_values = st.text_input("Enter X values (comma-separated):", "1, 2, 3, 4, 5")
+y_values = st.text_input("Enter Y values (comma-separated):", "1, 4, 9, 16, 25")
 
-    # Check if the lengths of x and y match
-    if len(x_data) != len(y_data):
-        st.error("The number of x and y data points must match!")
-    else:
-        # Convert data to a Pandas DataFrame for further processing
-        data = pd.DataFrame({"x": x_data, "y": y_data})
+# 图表类型选择
+plot_type = st.radio("Select plot type:", ["Line Plot", "Scatter Plot"])
 
-        # Display the data table
-        st.write("Entered Data Points:")
-        st.dataframe(data)
+# 按钮触发绘图
+if st.button("Plot Graph"):
+    try:
+        # 转换输入为数组
+        x = np.array([float(i.strip()) for i in x_values.split(",")])
+        y = np.array([float(i.strip()) for i in y_values.split(",")])
 
-        # Create a visualization plot
-        fig, ax = plt.subplots()
-        ax.plot(x_data, y_data, marker='o', linestyle='-', color='b', label='Connected Data Points')
-        ax.set_title("Data Points Visualization")
-        ax.set_xlabel("x values")
-        ax.set_ylabel("y values")
-        ax.legend()
+        # 检查 x 和 y 长度
+        if len(x) != len(y):
+            st.error("X and Y must have the same number of values!")
+        else:
+            # 创建图形
+            fig, ax = plt.subplots()
+            if plot_type == "Line Plot":
+                ax.plot(x, y, marker="o", label="Line Plot")
+            elif plot_type == "Scatter Plot":
+                ax.scatter(x, y, color="red", label="Scatter Plot")
 
-        # Display the plot in Streamlit
-        st.pyplot(fig)
+            ax.set_title("X-Y Plot")
+            ax.set_xlabel("X values")
+            ax.set_ylabel("Y values")
+            ax.legend()
 
-except ValueError:
-    st.error("Please ensure the x and y data points are valid numbers separated by commas!")
+            # 显示图形
+            st.pyplot(fig)
+    except Exception as e:
+        st.error(f"Error: {e}")

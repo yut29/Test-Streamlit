@@ -2,5 +2,5 @@ matplotlib==3.9.2
 streamlit==1.26.0
 pandas==1.5.3
 numpy==1.26.0
-pillow==11.0.0  # 或尝试其他版本
-libz-dev  # 如果有系统级依赖的安装需求
+pillow==10.0.0  # 或尝试其他版本
+
